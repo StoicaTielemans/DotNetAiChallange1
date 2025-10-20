@@ -1,0 +1,6 @@
+@TabTogetherApi_HostAddress = http://localhost:5011
+
+GET {{TabTogetherApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
