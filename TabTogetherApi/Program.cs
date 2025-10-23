@@ -11,19 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Register settings so DI can inject IOptions<AzureDocumentIntelligenceSettings>
 builder.Services.Configure<AzureDocumentIntelligenceSettings>(builder.Configuration.GetSection("AzureDocumentIntelligence"));
 
+builder.Services.Configure<BlobStorageSettings>(builder.Configuration.GetSection(BlobStorageSettings.ConfigurationSection));
+
 // Register the repository directly � DI will inject IOptions<AzureDocumentIntelligenceSettings>
 builder.Services.AddScoped<IDocumentItelligenceRepository, DocumentItelligenceRepository>();
-
-// ... rest of your existing registrations unchanged ...
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(builder =>
-//        builder.WithOrigins("http://localhost:5173","")
-//               .AllowAnyHeader()
-//               .AllowAnyMethod()
-//               .WithExposedHeaders("X-Pagination"));
-//});
+builder.Services.AddScoped<IStorageAccountBlobRepository, StorageAccountBlobRepository>();
 
 builder.Services.AddCors(options =>
 {
