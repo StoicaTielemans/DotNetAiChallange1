@@ -85,7 +85,6 @@ namespace TabTogetherApi.Services
             }
         }
 
-        /// <inheritdoc/>
         public async Task<(Stream Stream, string ContentType)?> GetImageAsync(string fileName)
         {
             var blobClient = _containerClient.GetBlobClient(fileName);

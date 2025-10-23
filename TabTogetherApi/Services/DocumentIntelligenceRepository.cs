@@ -105,14 +105,14 @@
 
             if (receipt.Fields.TryGetValue("TransactionDate", out DocumentField dateField))
             {
-                data.TransactionDate = dateField.ValueDate;
+                data.CreatedAt = dateField.ValueDate;
             }
 
             if (receipt.Fields.TryGetValue("Total", out DocumentField totalField))
             {
                 if (totalField.FieldType == DocumentFieldType.Currency)
                 {
-                    data.Total = totalField.ValueCurrency?.Amount ?? 0;
+                    data.Total = (decimal)(totalField.ValueCurrency?.Amount ?? 0);
                 }
             }
 
@@ -137,20 +137,20 @@
 
                             if (itemFields.TryGetValue("Description", out DocumentField descField))
                             {
-                                itemData.Description = descField.ValueString ?? string.Empty;
+                                itemData.Name = descField.ValueString ?? string.Empty;
                                 itemData.Confidence = descField.Confidence ?? 0;
                             }
 
                             if (itemFields.TryGetValue("Quantity", out DocumentField quantityField))
                             {
-                                itemData.Quantity = quantityField.ValueDouble;
+                                itemData.Amount = (int)quantityField.ValueDouble;
                             }
 
                             if (itemFields.TryGetValue("TotalPrice", out DocumentField priceField))
                             {
                                 if (priceField.FieldType == DocumentFieldType.Currency)
                                 {
-                                    itemData.TotalPrice = priceField.ValueCurrency?.Amount;
+                                    itemData.Price = (decimal)(priceField.ValueCurrency?.Amount);
                                 }
                             }
 

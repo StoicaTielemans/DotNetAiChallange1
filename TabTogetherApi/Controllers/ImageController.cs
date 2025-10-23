@@ -43,7 +43,7 @@ namespace TabTogetherApi.Controllers
                 var url = await _blobRepo.UploadImageAsync(ms, fileName, file.ContentType ?? "application/octet-stream");
                 return Ok(new { fileName, url });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "An error occurred while uploading the file.");
             }
@@ -69,7 +69,7 @@ namespace TabTogetherApi.Controllers
                 stream.Position = 0;
                 return File(stream, contentType ?? "application/octet-stream", fileName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "An error occurred while downloading the file.");
             }

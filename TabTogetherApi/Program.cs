@@ -1,9 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TabTogetherApi.Configuration;
+using TabTogetherApi.DbContexts;
 using TabTogetherApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Get connection string safely
+var conn = builder.Configuration.GetConnectionString("TabTogtherConnectionString")
+           ?? throw new InvalidOperationException("Connection string 'TabTogtherConnectionString' not found.");
+builder.Services.AddDbContext<TabTogetherContext>(options =>
+    options.UseSqlServer(conn.Replace(@"\\", @"\")));
 
 // Ensure Azure settings section exists in appsettings.json:
 // "AzureDocumentIntelligence": { "Endpoint": "https://...", "ApiKey": "..." }
