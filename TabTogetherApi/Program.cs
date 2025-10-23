@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+ï»¿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TabTogetherApi.Configuration;
 using TabTogetherApi.Services;
@@ -11,18 +11,34 @@ var builder = WebApplication.CreateBuilder(args);
 // Register settings so DI can inject IOptions<AzureDocumentIntelligenceSettings>
 builder.Services.Configure<AzureDocumentIntelligenceSettings>(builder.Configuration.GetSection("AzureDocumentIntelligence"));
 
-// Register the repository directly — DI will inject IOptions<AzureDocumentIntelligenceSettings>
+// Register the repository directly ï¿½ DI will inject IOptions<AzureDocumentIntelligenceSettings>
 builder.Services.AddScoped<IDocumentItelligenceRepository, DocumentItelligenceRepository>();
 
 // ... rest of your existing registrations unchanged ...
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddDefaultPolicy(builder =>
+//        builder.WithOrigins("http://localhost:5173","")
+//               .AllowAnyHeader()
+//               .AllowAnyMethod()
+//               .WithExposedHeaders("X-Pagination"));
+//});
+
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
-        builder.WithOrigins("http://localhost:5173")
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .WithExposedHeaders("X-Pagination"));
+    options.AddPolicy("DefaultCors", policy =>
+        policy.WithOrigins(
+                "http://localhost:5173",   // frontend dev server (http)
+                "https://localhost:5173",  // frontend dev server (https)
+                "https://localhost:7122",  // swagger / API origin
+                "http://localhost:7122"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithExposedHeaders("X-Pagination")
+            //.AllowCredentials() // enable only if your client sends credentials
+    );
 });
 
 builder.Services.AddControllers()
@@ -46,6 +62,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
-app.UseCors();
+app.UseCors("DefaultCors");
 app.MapControllers();
 app.Run();

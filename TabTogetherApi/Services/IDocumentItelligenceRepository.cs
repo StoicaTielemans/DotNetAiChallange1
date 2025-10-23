@@ -9,6 +9,8 @@ namespace TabTogetherApi.Services
         Task<Receipt> GetReceiptDataAsync(string imagePath);
         Task<Receipt> GetReceiptDataFromUrlAsync(Uri imageUrl);
         Task<List<ReceiptItem>> GetItemsAsync(string imagePath);
+
+        Task<List<ReceiptItem>> GetItemsFromUploadAsync(IFormFile file);
         Task<double> GetTotalAsync(string imagePath);
 
         // Raw analysis methods

@@ -8,6 +8,7 @@
     using Azure;
     using Azure.AI.DocumentIntelligence;
     using Microsoft.Extensions.Options;
+    using Microsoft.AspNetCore.Http;
     using TabTogetherApi.Configuration;
     using TabTogetherApi.Entities;
 
@@ -63,6 +64,18 @@
         public async Task<List<ReceiptItem>> GetItemsAsync(string imagePath)
         {
             var result = await AnalyzeReceiptAsync(imagePath);
+            return ExtractItems(result.Documents.FirstOrDefault());
+        }
+
+        // Get just items from uploaded file
+        public async Task<List<ReceiptItem>> GetItemsFromUploadAsync(IFormFile file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+
+            using var stream = file.OpenReadStream();
+            var content = BinaryData.FromStream(stream);
+            var operation = await _client.AnalyzeDocumentAsync(WaitUntil.Completed, "prebuilt-receipt", content);
+            var result = operation.Value;
             return ExtractItems(result.Documents.FirstOrDefault());
         }
 
